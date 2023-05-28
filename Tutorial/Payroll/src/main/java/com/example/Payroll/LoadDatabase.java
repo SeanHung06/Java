@@ -15,11 +15,21 @@ class LoadDatabase {
   // Bean is used to indicate that a method produces a bean to be managed by the Spring container.
   @Bean
   // CommandLineRunner is a simple Spring Boot interface with a run method and initDatabase method is used to pre-load some data.
-  CommandLineRunner initDatabase(EmployeeRepository repository) {
+  CommandLineRunner initDatabase(EmployeeRepository employeeRepository, OrderRepository orderRepository) {
 
     return args -> {
-      log.info("Preloading " + repository.save(new Employee("Bilbo", "Baggins", "burglar")));
-      log.info("Preloading " + repository.save(new Employee("Frodo", "Baggins", "thief")));
+      employeeRepository.save(new Employee("Bilbo", "Baggins", "burglar"));
+      employeeRepository.save(new Employee("Frodo", "Baggins", "thief"));
+      employeeRepository.findAll().forEach(employee -> log.info("Preloaded " + employee));
+      
+      orderRepository.save(new Order("MacBook Pro", Status.COMPLETED));
+      orderRepository.save(new Order("iPhone", Status.IN_PROGRESS));
+      orderRepository.save(new Order("Apple Watch", Status.IN_PROGRESS));
+      orderRepository.findAll().forEach(order -> {
+        log.info("Preloaded " + order);
+      });
+      
+   
     };
   }
 }
