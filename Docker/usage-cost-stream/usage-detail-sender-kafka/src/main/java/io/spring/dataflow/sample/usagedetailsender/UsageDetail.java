@@ -1,5 +1,4 @@
-package main.java.io.spring.dataflow.sample.usagedetailsender;
-
+package io.spring.dataflow.sample.usagedetailsender;
 
 public class UsageDetail {
         public UsageDetail() { }
