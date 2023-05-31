@@ -32,7 +32,7 @@ public class UsageCostProcessorApplicationTests {
 				TestChannelBinderConfiguration.getCompleteConfiguration(
 						UsageCostProcessorApplication.class)).web(WebApplicationType.NONE)
 				.run()) {
-
+			// The reason why we need InputDestination is that we need to send a message to the input channel of the processor.	
 			InputDestination source = context.getBean(InputDestination.class);
 
 			UsageDetail usageDetail = new UsageDetail();
@@ -42,10 +42,15 @@ public class UsageCostProcessorApplicationTests {
 
 			MessageConverter converter = context.getBean(CompositeMessageConverter.class);
 			Map<String, Object> headers = new HashMap<>();
+			// put method is used to add a new key-value pair to the map
+			// In the given code snippet, the Map<String, Object> headers is used to specify additional message headers for the input message being sent to the processor. 
+			// Specifically, it sets the "contentType" header to "application/json".
+			// In this case, setting the "contentType" header to "application/json" indicates that the message payload is in JSON format. 
 			headers.put("contentType", "application/json");
+
 			MessageHeaders messageHeaders = new MessageHeaders(headers);
 			Message<?> message = converter.toMessage(usageDetail, messageHeaders);
-
+			// Print -> message: GenericMessage [payload=byte[43], headers={contentType=application/json, id=2de10cf2-c62e-f383-779d-55e101f3ac06, timestamp=1685572704374}]
 			source.send(message);
 
 			OutputDestination target = context.getBean(OutputDestination.class);
